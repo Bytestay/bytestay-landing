@@ -1,8 +1,10 @@
+import logo from '/logo.png';
+
 export default function App() {
   return (
     <main className="wrapper">
       <div className="card">
-        <img src="/logo.png" alt="ByteStay logo" className="logo" />
+        <img src={logo} alt="ByteStay logo" className="logo" />
         <h1 className="title">ByteStay</h1>
         <p className="subtitle">em desenvolvimento</p>
       </div>
@@ -10,5 +12,5 @@ export default function App() {
         © {new Date().getFullYear()} ByteStay
       </footer>
     </main>
-  )
+  );
 }

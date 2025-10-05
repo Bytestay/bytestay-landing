@@ -8,6 +8,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -20,13 +21,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run build 
+      - name: Install dependencies (clean + retry)
+        shell: bash
+        run: |
+          set -e
+          echo "Cleaning existing node_modules and lockfile..."
+          rm -rf node_modules package-lock.json
+          echo "Installing dependencies..."
+          npm install || (echo "Retrying npm install after clean..." && rm -rf node_modules package-lock.json && npm install)
+      - name: Build site
+        run: npm run build
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
